@@ -82,4 +82,3 @@ def get_transctions_by_customer_id(customer_id):
 
 # DELETE /booking/<customer_id>/transctions/<booking_id>
 @bookings_bp.route("/<customer_id>/transctions/<booking_id>", methods=["DELETE"])
-    pass

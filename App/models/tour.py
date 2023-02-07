@@ -30,16 +30,17 @@ class Tour(db.Model):
     
     @classmethod
     def from_dict(cls, tour_data):
-        new_tour = Tour(name=tour_data["name"], 
-                        city=tour_data["city"], 
-                        address=tour_data["address"],
-                        date=tour_data["date"],
-                        duration_in_min=tour_data["duration_in_min"],
-                        price=tour_data["price"],
-                        category=tour_data["category"],
-                        is_outdoor=tour_data["is_outdoor"],
-                        capacity=tour_data["capacity"]
-                        )
+        new_tour = Tour(
+            name=tour_data["name"], 
+            city=tour_data["city"], 
+            address=tour_data["address"],
+            date=tour_data["date"],
+            duration_in_min=tour_data["duration_in_min"],
+            price=tour_data["price"],
+            category=tour_data["category"],
+            is_outdoor=tour_data["is_outdoor"],
+            capacity=tour_data["capacity"]
+        )
         return new_tour
     
     def available_capacity(id):
