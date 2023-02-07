@@ -3,7 +3,7 @@ import datetime
 
 class Booking(db.Model):
     __tablename__ = "booking"
-    id = db.Column(db.Integer, primary_key=True, autoincrement = True)
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     customer_id = db.Column(db.Integer, db.ForeignKey("customer.id"))
     customer = db.relationship("Customer", back_populates="bookings")
     tour_id = db.Column(db.Integer, db.ForeignKey("tour.id"))
@@ -16,6 +16,8 @@ class Booking(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
+            "customer_id": self.customer_id,
+            "tour_id": self.tour_id,
             "booking_date": self.booking_date.strftime("%Y-%m-%d"),
             "status": self.status,
             "tickets": self.tickets
