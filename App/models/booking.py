@@ -1,4 +1,5 @@
 from app import db
+import datetime
 
 class Booking(db.Model):
     __tablename__ = "booking"
@@ -7,7 +8,7 @@ class Booking(db.Model):
     customer = db.relationship("Customer", back_populates="bookings")
     tour_id = db.Column(db.Integer, db.ForeignKey("tour.id"))
     tour = db.relationship("Tour", back_populates="bookings")
-    booking_date = db.Column(db.DateTime)
+    booking_date = db.Column(db.DateTime, default = (datetime.date.today()))
     status = db.Column(db.String)
     tickets = db.Column(db.Integer)
     
@@ -15,7 +16,7 @@ class Booking(db.Model):
     def to_dict(self):
         return {
             "id": self.id,
-            "booking_date": self.booking_date,
+            "booking_date": self.booking_date.strftime("%Y-%m-%d"),
             "status": self.status,
             "tickets": self.tickets
         }

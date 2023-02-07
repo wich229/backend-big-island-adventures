@@ -1,7 +1,7 @@
 from app import db
 
 class Tour(db.Model):
-   
+
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String)
     city = db.Column(db.String)
