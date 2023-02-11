@@ -9,24 +9,23 @@ tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 # GET /tours
 @tours_bp.route("", methods=["GET"])
 def get_tours_optional_query():
-    pass
-    # tours_query = Tour.query
+    tours_query = Tour.query
 
-    # category_query = request.args.get("category")
-    # if category_query == "category":
-    #     tours_query = tours_query.order_by(Tour.category.asc())
+    category_query = request.args.get("category")
+    if category_query == "category":
+        tours_query = tours_query.order_by(Tour.category.asc())
 
-    # city_query = request.args.get("city")
-    # if city_query == "city":
-    #     tours_query = city_query.order_by(Tour.city.asc())
+    city_query = request.args.get("city")
+    if city_query == "city":
+        tours_query = city_query.order_by(Tour.city.asc())
 
-    # tours = tours_query.all()
+    tours = tours_query.all()
 
-    # tours_response = []
-    # for tour in tours:
-    #     tours_response.append(tour.to_dict())
+    tours_response = []
+    for tour in tours:
+        tours_response.append(tour.to_dict())
 
-    # return jsonify(tours_response)
+    return jsonify(tours_response)
 
 # GET /tours/<id>
 @tours_bp.route("/<tour_id>", methods=["GET"])
