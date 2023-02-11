@@ -37,13 +37,13 @@ def create_app(test_config=None):
     # from .routes import example_bp
     # app.register_blueprint(example_bp)
 
-    from .routes.customers_routes import customers_bp
+    from customers_routes import customers_bp
     app.register_blueprint(customers_bp)
 
-    from .routes.tours_routes import tours_bp
+    from tours_routes import tours_bp
     app.register_blueprint(tours_bp)
 
-    from .routes.bookings_routes import bookings_bp
+    from bookings_routes import bookings_bp
     app.register_blueprint(bookings_bp)
 
     CORS(app)

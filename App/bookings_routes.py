@@ -81,4 +81,4 @@ def get_transctions_by_customer_id(customer_id):
     return make_response(jsonify(transctions_response), 200)
 
 # DELETE /booking/<customer_id>/transctions/<booking_id>
-@bookings_bp.route("/<customer_id>/transctions/<booking_id>", methods=["DELETE"])
+# @bookings_bp.route("/<customer_id>/transctions/<booking_id>", methods=["DELETE"])

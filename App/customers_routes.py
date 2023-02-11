@@ -2,7 +2,6 @@ from app import db
 from app.models.tour import Tour
 from app.models.booking import Booking
 from app.models.customer import Customer
-from flask_session import Session
 from flask import Blueprint, jsonify, abort, make_response, request
 
 customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
@@ -29,9 +28,9 @@ customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 #--------------------------------------------------------------------
 #--------------------------------------------------------------------
 
-@app.route("/login", methods=["GET", "POST"])
+""" @customers_bp.route("/login", methods=["GET", "POST"])
 def login():
-    """Log user in"""
+    Log user in
     # Forget any user_id
     session.clear()
 
@@ -66,9 +65,9 @@ def login():
     
     
     
-@app.route("/logout")
+@customers_bp.route("/logout")
 def logout():
-    """Log user out"""
+    Log user out
 
     # Forget any user_id
     session.clear()
@@ -77,10 +76,10 @@ def logout():
     return redirect("/")
 
 
-@app.route("/quote", methods=["GET", "POST"])
+@customers_bp.route("/quote", methods=["GET", "POST"])
 @login_required
 def quote():
-    """Get stock quote."""
+    Get stock quote.
     if request.method == "POST":
         symbol = request.form.get("symbol")
         item = lookup(symbol)
@@ -94,9 +93,9 @@ def quote():
     
 
 
-@app.route("/register", methods=["GET", "POST"])
+@customers_bp.route("/register", methods=["GET", "POST"])
 def register():
-    """Register user"""
+    Register user
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
@@ -120,4 +119,4 @@ def register():
 
         return redirect("login")
     else:
-        return render_template("register.html")
+        return render_template("register.html") """
