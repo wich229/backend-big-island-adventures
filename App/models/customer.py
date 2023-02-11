@@ -21,10 +21,12 @@ class Customer(db.Model):
     
     @classmethod
     def from_dict(cls, customer_data):
-        new_customer = Customer(name=customer_data["name"],
-        email = customer_data["email"],
-        phone = customer_data["phone"],
-        password = customer_data["password"])
+        new_customer = Customer(
+            name=customer_data["name"],
+            email = customer_data["email"],
+            phone = customer_data["phone"],
+            password = customer_data["password"]
+        )
         return new_customer
     
     
