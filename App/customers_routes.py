@@ -7,8 +7,6 @@ from flask import Blueprint, jsonify, abort, make_response, request, session
 
 customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 
-
-
 # POST /add customer
 # @customers_bp.route("/register", methods=["POST"])
 
