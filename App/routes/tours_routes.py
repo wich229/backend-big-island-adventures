@@ -78,7 +78,7 @@ def create_tour():
 def update_tour_by_id(tour_id):
     tour = validate_model(Tour, tour_id)
     tour_data = request.get_json()
-    print(f"TOUR DATA {tour_data}")
+    
     try:
         tour.name=tour_data["name"]
         tour.city=tour_data["city"]
@@ -89,6 +89,7 @@ def update_tour_by_id(tour_id):
         tour.category=tour_data["category"]
         tour.is_outdoor=tour_data["is_outdoor"]
         tour.capacity=tour_data["capacity"]
+        tour.description=tour_data["description"]
     except KeyError as e:
         abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
     print(f"TOUR DATA {tour.to_dict()}")

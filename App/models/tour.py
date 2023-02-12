@@ -1,7 +1,6 @@
 from app import db
 
 class Tour(db.Model):
-
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String)
     city = db.Column(db.String)
@@ -26,7 +25,8 @@ class Tour(db.Model):
             "price": self.price,
             "category": self.category,
             "is_outdoor": self.is_outdoor,
-            "capacity": self.capacity
+            "capacity": self.capacity,
+            "description": self.description
         }
     
     @classmethod
@@ -40,7 +40,8 @@ class Tour(db.Model):
             price=tour_data["price"],
             category=tour_data["category"],
             is_outdoor=tour_data["is_outdoor"],
-            capacity=tour_data["capacity"]
+            capacity=tour_data["capacity"],
+            description=tour_data["description"]
         )
         return new_tour
     
