@@ -3,151 +3,138 @@ from app.models.tour import Tour
 from app.models.booking import Booking
 from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
+from sqlalchemy import desc
+from app.routes.helpers import get_all, pagination_helper, validate_model
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
-# GET /tours
+
+#-------------------------------------------------------------------------------
+# ------------------------------ Routes ----------------------------------------
+#-------------------------------------------------------------------------------
+# GET /tours (get all tours and limit showing 6 for each call)
+# ( query by => city / category / date / is_outdoor )
 @tours_bp.route("", methods=["GET"])
 def get_tours_optional_query():
-    pass
-    # tours_query = Tour.query
+    tours_query = Tour.query
+    
+    # Filter Queries
+    category_query = request.args.get("category")
+    city_query = request.args.get("city")
+    is_outdoor_query = request.args.get("is_outdoor")
+    date_query = request.args.get("date")
 
-    # category_query = request.args.get("category")
-    # if category_query == "category":
-    #     tours_query = tours_query.order_by(Tour.category.asc())
+    # Sort Query
+    sort_query = request.args.get("sort") # sort by date by most recent
 
-    # city_query = request.args.get("city")
-    # if city_query == "city":
-    #     tours_query = city_query.order_by(Tour.city.asc())
+    if date_query:
+        tours_query = tours_query.filter_by(category=date_query)
+    if category_query: 
+        tours_query = tours_query.filter_by(category=category_query)
+    if city_query:
+        tours_query = tours_query.filter_by(city=city_query)
+    if is_outdoor_query:
+        tours_query = tours_query.filter_by(is_outdoor=is_outdoor_query)
+    if sort_query:
+        tours_query = tours_query.order_by(Tour.date.desc()).all()
 
-    # tours = tours_query.all()
+    if not tours_query:
+        tours_query = tours_query.all()
 
-    # tours_response = []
-    # for tour in tours:
-    #     tours_response.append(tour.to_dict())
+    # Pagination queries
+    count_query = request.args.get("count")
+    page_num_query = request.args.get("page_num")
+    tours_response = pagination_helper(
+        page_num_query, count_query, tours_query, get_all)
 
-    # return jsonify(tours_response)
+    return make_response(jsonify(tours_response), 200)
 
-# GET /tours/<id>
+
+# GET /tours/<tour_id> (get a tour by tour_id )
 @tours_bp.route("/<tour_id>", methods=["GET"])
 def get_tour_by_id(tour_id):
-    pass
-    # tour_data = validate_model(Tour, tour_id)
+    tour_data = validate_model(Tour, tour_id)
 
-    # return tour_data.to_dict()
+    return make_response(jsonify(tour_data.to_dict()), 200)
 
 
-# POST /tours
+# POST /tours (create tour)
 @tours_bp.route("", methods=["POST"])
 def create_tour():
-    pass
-    # tour_data = request.get_json()
+    tour_data = request.get_json()
+    try:
+        new_tour = Tour.from_dict(tour_data)
+    except KeyError as e:
+        abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
 
-    # ###### refactor ######
-    # if "title" not in tour_data.keys():
-    #     abort(make_response({"details": f"Request body must include title."}, 400))
-    # if "release_date" not in tour_data.keys():
-    #     abort(make_response({"details": f"Request body must include release_date."}, 400))
-    # if  "total_inventory" not in tour_data.keys():
-    #     abort(make_response({"details": f"Request body must include total_inventory."}, 400))
+    db.session.add(new_tour)
+    db.session.commit()
 
-    # new_tour = Tour(
-    #     name=tour_data["name"],
-    #     city=tour_data["city"],
-    #     address=tour_data["address"],
-    #     date=tour_data["date"],
-    #     duration_in_min=tour_data["duration_in_min"],
-    #     price=tour_data["price"],
-    #     category=tour_data["category"],
-    #     is_outdoor=tour_data["outdoor"],
-    #     capacity=tour_data["capacity"]
-    # )
+    return make_response(jsonify(new_tour.to_dict()), 201)
 
-    # db.session.add(new_tour)
-    # db.session.commit()
 
-    # return make_response(jsonify(new_tour.to_dict()), 201)
-
-# PUT /tours/<id>
+# PUT /tours/<tour_id>  (optional)
 @tours_bp.route("/<tour_id>", methods=["PUT"])
 def update_tour_by_id(tour_id):
-    pass
-    #     tour = validate_model(Tour,tour_id)
-    #     tour_data = request.get_json()
+    tour = validate_model(Tour, tour_id)
+    tour_data = request.get_json()
+    print(f"TOUR DATA {tour_data}")
+    try:
+        tour.name=tour_data["name"]
+        tour.city=tour_data["city"]
+        tour.address=tour_data["address"]
+        tour.date=tour_data["date"]
+        tour.duration_in_min=tour_data["duration_in_min"]
+        tour.price=tour_data["price"]
+        tour.category=tour_data["category"]
+        tour.is_outdoor=tour_data["is_outdoor"]
+        tour.capacity=tour_data["capacity"]
+    except KeyError as e:
+        abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
+    print(f"TOUR DATA {tour.to_dict()}")
+    db.session.commit()
 
-    #     # ###### refactor ######
-    #     # if "title" not in tour_data.keys():
-    #     #     abort(make_response({"details": f"Request body must include title."}, 400))
-    #     # if "release_date" not in tour_data.keys():
-    #     #     abort(make_response({"details": f"Request body must include release_date."}, 400))
-    #     # if  "total_inventory" not in tour_data.keys():
-    #     #     abort(make_response({"details": f"Request body must include total_inventory."}, 400))
+    return make_response(jsonify(tour.to_dict()), 200)
 
-    #     # tour.title = tour_data["title"]
-    #     # tour.release_date =tour_data["release_date"]
-    #     # tour.total_inventory = tour_data["total_inventory"]
 
-    #     db.session.commit()
 
-    #     return make_response(tour_data, 200)
-
-# DELETE /tours/<id>
+# DELETE /tours/<tours_id>
 @tours_bp.route("/<tour_id>", methods=["DELETE"])
 def delete_customer_by_id(tour_id):
-    pass
-    # tour_to_delete = validate_model(Tour,tour_id)
-    # db.session.delete(tour_to_delete)
-    # db.session.commit()
+    tour_to_delete = validate_model(Tour,tour_id)
+    db.session.delete(tour_to_delete)
+    db.session.commit()
 
-    # msg = f"Customer {tour_to_delete.id} successfully deleted"
-    # return make_response(jsonify({"id":tour_to_delete.id, "message":msg}), 200)
+    msg = f"Customer {tour_to_delete.id} successfully deleted"
+    return make_response(jsonify({"id":tour_to_delete.id, "message":msg}), 200)
 
-# GET /id/bookings
+
+
+# GET /id/bookings    (no need)
 @tours_bp.route("/<tour_id>/bookings", methods=["GET"])
 def bookings_by_tour(tour_id):
-    pass
-    # tour = validate_model(Tour, tour_id)
-    # # bookings = Booking.query.all()
-    # bookings = Booking.query.filter(Booking.tour_id == tour.id).all()
-    # customer_query = Customer.query
+    tour = validate_model(Tour, tour_id)
 
-    # # sort queries for title and release date
-    # sort_query = request.args.get("sort")
+    bookings = Booking.query.filter(Booking.tour_id == tour.id).all()
+    customer_query = Customer.query
 
-    # if sort_query == "name":
-    #     customer_query = customer_query.order_by(Customer.name.asc())
-    # elif sort_query == "postal_code":
-    #     customer_query = customer_query.order_by(Customer.postal_code.asc())
+    sort_query = request.args.get("sort")
 
-    # #exception handling: page_num and count queries are invalid
-    # try:
-    #     page_num_query = int(request.args.get("page_num"))
-    # except:
-    #     page_num_query = None
+    if sort_query == "name":
+        customer_query = customer_query.order_by(Customer.name.asc())
 
-    # try :
-    #     count_query = int(request.args.get("count"))
-    # except:
-    #     count_query = None
+    count_query = request.args.get("count")
+    page_num_query = request.args.get("page_num")
+    customers = pagination_helper(page_num_query, count_query, sort_query, get_all)
 
-    # if page_num_query and count_query:
-    #     customers = customer_query.paginate(page = page_num_query, per_page = count_query).items
-    # elif page_num_query:
-    #     customers = customer_query.paginate(page = page_num_query).items
-    # elif count_query:
-    #     customers = customer_query.paginate(per_page = count_query).items
-    # else:
-    #     customers = customer_query.all()
+    # get bookings
+    customer_list = []
+    for booking in bookings:
+        customer_list.append(Customer.query.get(booking.customer_id))
+    
+    booking_response = []
+    for customer in customers:
+        if customer in customer_list:
+            booking_response.append(customer.to_dict())
 
-    # # get bookings
-    # customer_list = []
-    # for booking in bookings:
-    #     customer_list.append(Customer.query.get(booking.customer_id))
-
-    # booking_response = []
-    # for customer in customers:
-    #     if customer in customer_list:
-    #         booking_response.append(customer.to_dict())
-
-    # return make_response(jsonify(booking_response), 200)
-
+    return make_response(jsonify(booking_response), 200)
