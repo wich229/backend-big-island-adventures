@@ -1,6 +1,6 @@
 from app import db
-
-class Customer(db.Model):
+from flask_login import UserMixin
+class Customer(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
     name = db.Column(db.String)
     email = db.Column(db.String) 
