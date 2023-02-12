@@ -9,7 +9,7 @@ class Booking(db.Model):
     tour_id = db.Column(db.Integer, db.ForeignKey("tour.id"))
     tour = db.relationship("Tour", back_populates="bookings")
     booking_date = db.Column(db.DateTime, default = (datetime.date.today()))
-    status = db.Column(db.String)
+    status = db.Column(db.String, default = "confirmed")
     tickets = db.Column(db.Integer)
     
     
@@ -27,8 +27,11 @@ class Booking(db.Model):
     @classmethod
     def from_dict(cls, booking_data):
         new_booking = Booking(
-            booking_date = booking_data["booking_date"],
-            status = booking_data["status"],
+            # no need because they are default
+            # booking_date = booking_data["booking_date"],
+            # status = booking_data["status"],
+            # customer_id = booking_data["customer_id"],
+            # tour_id = booking_data["tour_id"],
             tickets = booking_data["tickets"]
         )
         return new_booking

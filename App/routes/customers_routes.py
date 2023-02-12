@@ -4,14 +4,21 @@ from app.models.booking import Booking
 from app.models.customer import Customer
 # from flask_session import Session
 from flask import Blueprint, jsonify, abort, make_response, request
+from app.routes.helpers import validate_model,validate_request_and_create_entry
 
 customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 
 ### how Session tracking user_ID when user login
 
 # POST /add customer
-# @customers_bp.route("/register", methods=["POST"])
+@customers_bp.route("/register", methods=["POST"])
+def create_one_customer():
+    customer_data = request.get_json()
+    new_customer = validate_request_and_create_entry(Customer, customer_data)
 
+    db.session.add(new_customer)
+    db.session.commit()
+    return make_response(new_customer.to_dict(), 201)
 
 
 # POST /get customer or # GET customers/<customer_id>
@@ -25,6 +32,14 @@ customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 
 
 # DELETE /customers/<customer_id>
+customers_bp.route("/<customer_id>", methods=["DELETE"])
+def delete_one_customer_by_id(customer_id):
+    customer = validate_model(Customer, customer_id)
+
+    db.session.delete(customer)
+    db.session.commit()
+
+    return make_response(jsonify({"message": f"customer #{customer.id} successfully deleted"}), 200)
 
 
 #--------------------------------------------------------------------

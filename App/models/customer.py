@@ -16,7 +16,8 @@ class Customer(db.Model):
             "name": self.name,
             "email": self.email,
             "phone": self.phone,
-            "password": self.password
+            "password": self.password,
+            "bookings": [list(booking.to_dict()) for booking in self.bookings]
         }
     
     @classmethod
