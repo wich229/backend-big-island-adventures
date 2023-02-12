@@ -1,7 +1,7 @@
 from app import db
 
 class Tour(db.Model):
-   
+
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String)
     city = db.Column(db.String)
@@ -13,6 +13,7 @@ class Tour(db.Model):
     is_outdoor = db.Column(db.Boolean)
     capacity = db.Column(db.Integer)
     bookings = db.relationship("Booking", back_populates="tour")
+    description = db.Column(db.String)
     
     def to_dict(self):
         return {
@@ -30,16 +31,17 @@ class Tour(db.Model):
     
     @classmethod
     def from_dict(cls, tour_data):
-        new_tour = Tour(name=tour_data["name"], 
-                        city=tour_data["city"], 
-                        address=tour_data["address"],
-                        date=tour_data["date"],
-                        duration_in_min=tour_data["duration_in_min"],
-                        price=tour_data["price"],
-                        category=tour_data["category"],
-                        is_outdoor=tour_data["is_outdoor"],
-                        capacity=tour_data["capacity"]
-                        )
+        new_tour = Tour(
+            name=tour_data["name"], 
+            city=tour_data["city"], 
+            address=tour_data["address"],
+            date=tour_data["date"],
+            duration_in_min=tour_data["duration_in_min"],
+            price=tour_data["price"],
+            category=tour_data["category"],
+            is_outdoor=tour_data["is_outdoor"],
+            capacity=tour_data["capacity"]
+        )
         return new_tour
     
     def available_capacity(id):

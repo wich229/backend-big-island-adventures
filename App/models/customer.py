@@ -16,15 +16,18 @@ class Customer(db.Model):
             "name": self.name,
             "email": self.email,
             "phone": self.phone,
-            "password": self.password
+            "password": self.password,
+            "bookings": [list(booking.to_dict()) for booking in self.bookings]
         }
     
     @classmethod
     def from_dict(cls, customer_data):
-        new_customer = Customer(name=customer_data["name"],
-        email = customer_data["email"],
-        phone = customer_data["phone"],
-        password = customer_data["password"])
+        new_customer = Customer(
+            name=customer_data["name"],
+            email = customer_data["email"],
+            phone = customer_data["phone"],
+            password = customer_data["password"]
+        )
         return new_customer
     
     
