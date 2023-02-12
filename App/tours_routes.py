@@ -4,7 +4,7 @@ from app.models.booking import Booking
 from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
 from sqlalchemy import desc
-from helpers import get_all, pagination_helper, validate_model
+from app.helpers import get_all, pagination_helper, validate_model
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
@@ -71,11 +71,20 @@ def create_tour():
 def update_tour_by_id(tour_id):
         tour = validate_model(Tour, tour_id)
         tour_data = request.get_json()
+        print(f"TOUR DATA {tour_data}")
         try:
-            tour = Tour.from_dict(tour_data)
+            tour.name=tour_data["name"]
+            tour.city=tour_data["city"]
+            tour.address=tour_data["address"]
+            tour.date=tour_data["date"]
+            tour.duration_in_min=tour_data["duration_in_min"]
+            tour.price=tour_data["price"]
+            tour.category=tour_data["category"]
+            tour.is_outdoor=tour_data["is_outdoor"]
+            tour.capacity=tour_data["capacity"]
         except KeyError as e:
             abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
-
+        print(f"TOUR DATA {tour.to_dict()}")
         db.session.commit()
 
         return make_response(jsonify(tour.to_dict()), 200)
