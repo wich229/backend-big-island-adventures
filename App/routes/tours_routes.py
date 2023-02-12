@@ -6,7 +6,11 @@ from flask import Blueprint, jsonify, abort, make_response, request
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
-# GET /tours
+
+
+
+# GET /tours (get all tours and limit showing 6 for each call)
+# ( query by => region / tour_type / date / capacity  )
 @tours_bp.route("", methods=["GET"])
 def get_tours_optional_query():
     pass
@@ -28,7 +32,9 @@ def get_tours_optional_query():
 
     # return jsonify(tours_response)
 
-# GET /tours/<id>
+
+
+# GET /tours/<tour_id> (get a tour by tour_id )
 @tours_bp.route("/<tour_id>", methods=["GET"])
 def get_tour_by_id(tour_id):
     pass
@@ -37,7 +43,8 @@ def get_tour_by_id(tour_id):
     # return tour_data.to_dict()
 
 
-# POST /tours
+
+# POST /tours (create tour)
 @tours_bp.route("", methods=["POST"])
 def create_tour():
     pass
@@ -68,7 +75,9 @@ def create_tour():
 
     # return make_response(jsonify(new_tour.to_dict()), 201)
 
-# PUT /tours/<id>
+
+
+# PUT /tours/<tour_id>  (optional)
 @tours_bp.route("/<tour_id>", methods=["PUT"])
 def update_tour_by_id(tour_id):
     pass
@@ -91,7 +100,9 @@ def update_tour_by_id(tour_id):
 
     #     return make_response(tour_data, 200)
 
-# DELETE /tours/<id>
+
+
+# DELETE /tours/<tours_id>
 @tours_bp.route("/<tour_id>", methods=["DELETE"])
 def delete_customer_by_id(tour_id):
     pass
@@ -102,7 +113,9 @@ def delete_customer_by_id(tour_id):
     # msg = f"Customer {tour_to_delete.id} successfully deleted"
     # return make_response(jsonify({"id":tour_to_delete.id, "message":msg}), 200)
 
-# GET /id/bookings
+
+
+# GET /id/bookings    (no need)
 @tours_bp.route("/<tour_id>/bookings", methods=["GET"])
 def bookings_by_tour(tour_id):
     pass

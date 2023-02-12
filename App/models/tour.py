@@ -13,6 +13,7 @@ class Tour(db.Model):
     is_outdoor = db.Column(db.Boolean)
     capacity = db.Column(db.Integer)
     bookings = db.relationship("Booking", back_populates="tour")
+    description = db.Column(db.String)
     
     def to_dict(self):
         return {
