@@ -1,4 +1,5 @@
 from flask import Flask
+from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from dotenv import load_dotenv
@@ -30,6 +31,7 @@ def create_app(test_config=None):
     from app.models.booking import Booking
 
     # Setup DB
+    bcrypt = Bcrypt(app)
     db.init_app(app)
     migrate.init_app(app, db)
 

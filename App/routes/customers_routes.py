@@ -1,10 +1,12 @@
 from app import db
+from app import bcrypt
 from app.models.tour import Tour
 from app.models.booking import Booking
 from app.models.customer import Customer
 # from flask_session import Session
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import validate_model,validate_request_and_create_entry
+
 
 customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 
@@ -15,7 +17,7 @@ customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 def create_one_customer():
     customer_data = request.get_json()
     new_customer = validate_request_and_create_entry(Customer, customer_data)
-
+    new_customer.password = bcrypt.generate_password_hash(customer_data["password"])
     db.session.add(new_customer)
     db.session.commit()
     return make_response(new_customer.to_dict(), 201)
