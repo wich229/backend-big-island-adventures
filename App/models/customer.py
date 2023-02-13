@@ -3,7 +3,7 @@ from app import db
 class Customer(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement = True)
     name = db.Column(db.String)
-    email = db.Column(db.String) 
+    email = db.Column(db.String, unique =True) 
     phone = db.Column(db.String) 
     password = db.Column(db.String)
     bookings = db.relationship("Booking", back_populates="customer")
