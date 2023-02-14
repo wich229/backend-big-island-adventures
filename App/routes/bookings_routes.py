@@ -36,10 +36,11 @@ def sort_attribute_helper(cls, query, attr=None, sort_method="asc"):
 #-------------------------------------------------------------------------------
 # ------------------------------ Routes ----------------------------------------
 #-------------------------------------------------------------------------------
-# POST /booking/booking_detail/<tour_id>
+# POST /bookings/booking_detail/<tour_id>
 @bookings_bp.route("/<customer_id>/booking_detail/<tour_id>", methods=["POST"])
 def booking_one_event(customer_id, tour_id):
     booking_data = request.get_json()
+    print(booking_data)
     
     customer = validate_model(Customer,customer_id)
     tour = validate_model(Tour, tour_id)
@@ -55,7 +56,7 @@ def booking_one_event(customer_id, tour_id):
     print(available_tickets)
     
     try:
-        if(booking_data.tickets > available_tickets):
+        if(booking_data["tickets"] > available_tickets):
             abort(make_response({"message": f"No available_tickets for customer {customer.id} and tour {tour.id}"}, 400))    
         
         new_booking = Booking(
@@ -70,6 +71,7 @@ def booking_one_event(customer_id, tour_id):
         abort(make_response(
             {"details": f"Request body must include {keyerror.args[0]}."}, 400))
     
+    return make_response(new_booking.to_dict(),201)
     
 # GET /booking/<customer_id>/transctions
 @bookings_bp.route("/<customer_id>/transctions", methods=["GET"])
