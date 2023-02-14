@@ -45,14 +45,23 @@ def booking_one_event(customer_id, tour_id):
     customer = validate_model(Customer,customer_id)
     tour = validate_model(Tour, tour_id)
 
+    #----------------------------------------------------------------------
+    # old version ---------------------------------------------------------
+    #----------------------------------------------------------------------
     # invoke Tour.available_capacity(tour.id, saled_tickets_total) to get available_capacity
     # saled_tickets_total: sql => SELECT tour_id, SUM(tickets)FROM booking WHERE tour_id=1 GROUP BY tour_id;
     # if booking tickets greater than calcuated available_capacity reasie error
-    saled_tickets_total_query = Booking.query.filter_by(tour_id=tour.id, status="confirmed")
-    total_saled = sum([ each_sale.tickets for each_sale in saled_tickets_total_query])
-    print(total_saled)
+    #----------------------------------------------------------------------
+    # saled_tickets_total_query = Booking.query.filter_by(tour_id=tour.id, status="confirmed")
+    # total_saled = sum([ each_sale.tickets for each_sale in saled_tickets_total_query])
+    # print(total_saled)
+    #available_tickets = tour.available_capacity(total_saled)
     
-    available_tickets = tour.available_capacity(total_saled)
+    #----------------------------------------------------------------------
+    #new version ----------------------------------------------------------
+    #----------------------------------------------------------------------
+    available_tickets = tour.available_capacity()
+    
     print(available_tickets)
     
     try:

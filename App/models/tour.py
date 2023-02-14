@@ -45,9 +45,19 @@ class Tour(db.Model):
         )
         return new_tour
     
-    def available_capacity(self, saled_tickets_total):
-        # available_capacity = capacity - (add up each booking tickets from the tour_id)
-        available_capacity = self.capacity - saled_tickets_total
-        if available_capacity <= 0:
-            return 0
+    # def available_capacity(self, saled_tickets_total):
+    #     # available_capacity = capacity - (add up each booking tickets from the tour_id)
+    #     available_capacity = self.capacity - saled_tickets_total
+    #     if available_capacity <= 0:
+    #         return 0
+    #     return available_capacity
+    
+    
+    # updated -------------------------------------------------------
+    def available_capacity(self):
+        # looping through the bookings to count the saled tickets
+        total_saled = sum([ each_booking.tickets for each_booking in self.bookings])
+        
+        available_capacity = self.capacity - total_saled
         return available_capacity
+            
