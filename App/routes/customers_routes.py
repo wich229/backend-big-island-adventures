@@ -2,7 +2,7 @@ from app import db
 from app.models.tour import Tour
 from app.models.booking import Booking
 from app.models.customer import Customer
-# from flask_session import Session
+from flask_session import Session
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import validate_model,validate_request_and_create_entry
 

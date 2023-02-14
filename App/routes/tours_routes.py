@@ -3,7 +3,6 @@ from app.models.tour import Tour
 from app.models.booking import Booking
 from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
-from sqlalchemy import desc
 from app.routes.helpers import get_all, pagination_helper, validate_model
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
