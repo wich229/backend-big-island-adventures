@@ -2,6 +2,7 @@ from app import db
 from app.models.tour import Tour
 from app.models.booking import Booking
 from app.models.customer import Customer
+from app.models.session import Session
 # from flask_session import Session
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import validate_model,validate_request_and_create_entry
@@ -22,12 +23,73 @@ def create_one_customer():
 
 
 # POST /get customer or # GET customers/<customer_id>
-# @customers_bp.route("/login", methods=["GET, POST"])
+@customers_bp.route("/login", methods=["POST"])
+def customer_log_in():
+    # input: 
+    #     customer email
+    #     passsword
+    # return:
+    #     session id
+    customer_data = request.get_json()
+    email = customer_data["email"]
+    password = customer_data["password"]
+
+    customer = Customer.query.filter(Customer.email == email).first()
+    if customer is None:
+        # wrong email
+        return make_response({"message": "Invalid email"}, 400)
+
+    existing_sessions = Session.query.filter(Session.customer_id == customer.id).filter(Session.is_active).all()
+
+    if existing_sessions is not None and len(existing_sessions) != 0:
+        active_session = max(existing_sessions, key=lambda s: s.create_timestamp)
+        return make_response({"session": active_session.id}, 201)
+    else:
+        # If no existing session
+        if auth(customer, password):
+            # create a new session
+            return create_session(customer.id)
+        else:
+            return make_response({"message": "Invalid password"}, 400)
+
+
+def create_session(customer_id):
+    session = Session(
+        customer_id=customer_id,
+        is_active=True
+    )
+
+    db.session.add(session)
+    db.session.commit()
+
+    return make_response({"session": session.id}, 201)
+
+
+def auth(customer, password):
+    if customer.password == password:
+        # success
+        return True
+    else:
+        # wrong password
+        return False
 
 
 
 # POST /logout
-# @app.route("/logout", methods=["POST"])
+@customers_bp.route("/logout", methods=["POST"])
+def customer_log_out():
+    # input: 
+    #     session id
+    session_id = request.get_json()["session_id"]
+    existing_sessions = Session.query.filter(Session.id == session_id).first()
+
+    if existing_sessions is not None:
+        existing_sessions.is_active = False;
+        db.session.commit()
+
+    return make_response({"message": "successfully logged out"}, 201)
+
+
 
 
 

@@ -7,7 +7,7 @@ class Customer(db.Model):
     phone = db.Column(db.String) 
     password = db.Column(db.String)
     bookings = db.relationship("Booking", back_populates="customer")
-
+    sessions = db.relationship("Session", back_populates="customer")
 
     
     def to_dict(self):
@@ -17,7 +17,8 @@ class Customer(db.Model):
             "email": self.email,
             "phone": self.phone,
             "password": self.password,
-            "bookings": [list(booking.to_dict()) for booking in self.bookings]
+            "bookings": [list(booking.to_dict()) for booking in self.bookings],
+            "sessions": [list(session.to_dict()) for session in self.sessions]
         }
     
     @classmethod
@@ -29,5 +30,10 @@ class Customer(db.Model):
             password = customer_data["password"]
         )
         return new_customer
-    
-    
+
+
+# drop database touring_api_test;
+# drop database touring_api_development;
+# create database touring_api_test;
+# create database touring_api_development;
+# flask db init; flask db migrate -m "init" ; flask db upgrade 

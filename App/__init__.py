@@ -28,6 +28,7 @@ def create_app(test_config=None):
     from app.models.customer import Customer
     from app.models.tour import Tour
     from app.models.booking import Booking
+    from app.models.session import Session
 
     # Setup DB
     db.init_app(app)
