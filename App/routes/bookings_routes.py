@@ -10,7 +10,7 @@ from app.routes.helpers import validate_model
 bookings_bp = Blueprint("bookings_bp", __name__, url_prefix="/bookings")
 
 #-------------------------------------------------------------------------------
-# --------------------------- Helper Functions ---------------------------------
+#---------------------------- Helper Functions ---------------------------------
 #-------------------------------------------------------------------------------
 
 def sort_attribute_helper(cls, query, attr=None, sort_method="asc"):
@@ -34,7 +34,7 @@ def sort_attribute_helper(cls, query, attr=None, sort_method="asc"):
 
     return query
 #-------------------------------------------------------------------------------
-# ------------------------------ Routes ----------------------------------------
+#------------------------------- Routes ----------------------------------------
 #-------------------------------------------------------------------------------
 # POST /bookings/booking_detail/<tour_id>
 @bookings_bp.route("/<customer_id>/booking_detail/<tour_id>", methods=["POST"])
