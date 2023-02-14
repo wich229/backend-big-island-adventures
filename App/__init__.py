@@ -1,6 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from flask_session import Session
 from dotenv import load_dotenv
 import os
 from flask_cors import CORS
@@ -14,6 +15,9 @@ def create_app(test_config=None):
     app = Flask(__name__)
     app.url_map.strict_slashes = False
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
+    # Configure session to use filesystem (instead of signed cookies)
+    app.config["SESSION_PERMANENT"] = False
+    app.config["SESSION_TYPE"] = "filesystem"
 
     if test_config is None:
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
@@ -32,6 +36,7 @@ def create_app(test_config=None):
     # Setup DB
     db.init_app(app)
     migrate.init_app(app, db)
+    Session(app)
 
     # Register Blueprints here
     # from .routes import example_bp

@@ -109,6 +109,7 @@ celerybeat.pid
 
 # Environments
 .env
+flask_session
 venv
 __pycache__
 .vscode

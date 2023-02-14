@@ -5,7 +5,7 @@ from app.models.customer import Customer
 from datetime import date
 from sqlalchemy.sql import functions
 from flask import Blueprint, jsonify, make_response, request, abort
-from app.routes.helpers import validate_model,validate_request_and_create_entry
+from app.routes.helpers import validate_model
 
 bookings_bp = Blueprint("bookings_bp", __name__, url_prefix="/bookings")
 
@@ -55,21 +55,20 @@ def booking_one_event(customer_id, tour_id):
     print(available_tickets)
     
     try:
-        if(booking_data.tickets <= available_tickets):
-            new_booking = Booking(
+        if(booking_data.tickets > available_tickets):
+            abort(make_response({"message": f"No available_tickets for customer {customer.id} and tour {tour.id}"}, 400))    
+        
+        new_booking = Booking(
                 customer_id = customer.id,
                 tour_id = tour.id,
                 tickets = booking_data["tickets"]
             )
-            db.session.add(new_booking)
-            db.session.commit()
-            
-    except:
-        abort(make_response(
-        {"message": f"No available_tickets for customer {customer.id} and tour {tour.id}"}, 400))
-
+        db.session.add(new_booking)
+        db.session.commit() 
     
-    return make_response(new_booking.to_dict(),201)
+    except KeyError as keyerror:
+        abort(make_response(
+            {"details": f"Request body must include {keyerror.args[0]}."}, 400))
     
     
 # GET /booking/<customer_id>/transctions
