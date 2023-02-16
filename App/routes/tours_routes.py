@@ -7,7 +7,6 @@ from app.routes.helpers import get_all, pagination_helper, validate_model
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
-
 #-------------------------------------------------------------------------------
 # ------------------------------ Routes ----------------------------------------
 #-------------------------------------------------------------------------------
@@ -22,12 +21,11 @@ def get_tours_optional_query():
     city_query = request.args.get("city")
     is_outdoor_query = request.args.get("is_outdoor")
     date_query = request.args.get("date")
-
     # Sort Query
     sort_query = request.args.get("sort") # sort by date by most recent
 
     if date_query:
-        tours_query = tours_query.filter_by(category=date_query)
+        tours_query = tours_query.filter_by(date=date_query)
     if category_query: 
         tours_query = tours_query.filter_by(category=category_query)
     if city_query:
@@ -105,7 +103,7 @@ def delete_customer_by_id(tour_id):
     db.session.delete(tour_to_delete)
     db.session.commit()
 
-    msg = f"Customer {tour_to_delete.id} successfully deleted"
+    msg = f"Tour {tour_to_delete.id} successfully deleted"
     return make_response(jsonify({"id":tour_to_delete.id, "message":msg}), 200)
 
 

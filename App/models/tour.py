@@ -20,7 +20,7 @@ class Tour(db.Model):
             "name": self.name,
             "city": self.city,
             "address": self.address,
-            "date": self.date,
+            "date": self.date.strftime('%-m/%-d/%Y'),
             "duration_in_min": self.duration_in_min,
             "price": self.price,
             "category": self.category,
