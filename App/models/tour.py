@@ -1,4 +1,5 @@
 from app import db
+from datetime import datetime
 
 class Tour(db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
@@ -13,6 +14,7 @@ class Tour(db.Model):
     capacity = db.Column(db.Integer)
     bookings = db.relationship("Booking", back_populates="tour")
     description = db.Column(db.String)
+    photo_url = db.Column(db.String)
     
     def to_dict(self):
         return {
@@ -26,7 +28,8 @@ class Tour(db.Model):
             "category": self.category,
             "is_outdoor": self.is_outdoor,
             "capacity": self.capacity,
-            "description": self.description
+            "description": self.description,
+            "photo_url": self.photo_url
         }
     
     @classmethod
@@ -41,7 +44,8 @@ class Tour(db.Model):
             category=tour_data["category"],
             is_outdoor=tour_data["is_outdoor"],
             capacity=tour_data["capacity"],
-            description=tour_data["description"]
+            description=tour_data["description"],
+            photo_url=tour_data["photo_url"]
         )
         return new_tour
     
