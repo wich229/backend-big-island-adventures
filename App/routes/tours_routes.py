@@ -4,7 +4,7 @@ from app.models.booking import Booking
 from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import get_all, pagination_helper, validate_model
-from datetime import datetime
+from datetime import datetime, date
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
@@ -18,23 +18,22 @@ def get_tours_optional_query():
     tours_query = Tour.query
     
     # Filter Queries
-    category_query = request.args.get("category")
-    city_query = request.args.get("city")
-    is_outdoor_query = request.args.get("is_outdoor")
+    category_query = request.args.getlist("category")
+    city_query = request.args.getlist("city")
+    print(city_query)
+    is_outdoor_query = request.args.getlist("is_outdoor")
     date_query = request.args.get("date")
-    # Sort Query
-    sort_query = request.args.get("sort") # sort by date by most recent
 
     if date_query:
+        date_query = datetime.strptime(date_query, ("%m/%d/%Y"))
         tours_query = tours_query.filter_by(date=date_query)
     if category_query: 
-        tours_query = tours_query.filter_by(category=category_query)
+        print(category_query)
+        tours_query = tours_query.filter(Tour.category.in_(category_query))
     if city_query:
-        tours_query = tours_query.filter_by(city=city_query)
+        tours_query = tours_query.filter(Tour.city.in_(city_query))
     if is_outdoor_query:
-        tours_query = tours_query.filter_by(is_outdoor=is_outdoor_query)
-    if sort_query:
-        tours_query = tours_query.order_by(Tour.date.desc()).all()
+        tours_query = tours_query.filter(Tour.is_outdoor.in_(is_outdoor_query))
 
     if not tours_query:
         tours_query = tours_query.all()
@@ -63,7 +62,7 @@ def create_tour():
     try:
         new_tour = Tour.from_dict(tour_data)
     except KeyError as e:
-        abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
+        abort(make_response({"details": f"Request body must include {e[0]}"}, 400))
 
     db.session.add(new_tour)
     db.session.commit()
@@ -81,17 +80,17 @@ def update_tour_by_id(tour_id):
         tour.name=tour_data["name"]
         tour.city=tour_data["city"]
         tour.address=tour_data["address"]
-        tour.date=datetime.strptime(tour_data["date"], ('%m/%d/%Y'))
+        tour.date=tour_data["date"]
         tour.duration_in_min=tour_data["duration_in_min"]
         tour.price=tour_data["price"]
         tour.category=tour_data["category"]
         tour.is_outdoor=tour_data["is_outdoor"]
         tour.capacity=tour_data["capacity"]
         tour.description=tour_data["description"]
-        tour.photo_url=tour_data["photo_url"]
+        tour.photo_url=tour_data["photo_url"],
+        tour.time = tour_data["time"]
     except KeyError as e:
         abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
-    print(f"TOUR DATA {tour.to_dict()}")
     db.session.commit()
 
     return make_response(jsonify(tour.to_dict()), 200)

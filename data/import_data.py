@@ -18,7 +18,7 @@ with open('./data/tours_data_testing.csv', 'r') as f:
     next(reader) # Skip the header row.
     for row in reader:
         cursor.execute(
-        "INSERT INTO tour VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
+        "INSERT INTO tour VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)",
         row
     )
     #other way-----------------------------------------------
