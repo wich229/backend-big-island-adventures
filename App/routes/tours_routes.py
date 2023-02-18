@@ -18,28 +18,29 @@ def get_tours_optional_query():
     tours_query = Tour.query
     
     # Filter Queries
-    category_query = request.args.get("category")
-    city_query = request.args.get("city")
-    is_outdoor_query = request.args.get("is_outdoor")
+    category_query = request.args.getlist("category")
+    city_query = request.args.getlist("city")
+    print(city_query)
+    is_outdoor_query = request.args.getlist("is_outdoor")
     date_query = request.args.get("date")
 
-    # Sort Query
-    sort_query = request.args.get("sort") # sort by date by most recent
-
     if date_query:
-        date_query = datetime.strptime(date_query, '%Y-%m-%d')
-        date_query_add_date = date_query + timedelta(days=1)
-        # print(type(date_query))
-        # print(date_query)
-        tours_query = tours_query.filter(Tour.date>=date_query).filter(Tour.date <= date_query_add_date)
+        # my soluction-------------------------------------------------------
+        # date_query = datetime.strptime(date_query, '%Y-%m-%d')
+        # date_query_add_date = date_query + timedelta(days=1)
+        # # print(type(date_query))
+        # # print(date_query)
+        # tours_query = tours_query.filter(Tour.date>=date_query).filter(Tour.date <= date_query_add_date)
+        # --------------------------------------------------------------------
+        date_query = datetime.strptime(date_query, ("%m/%d/%Y"))
+        tours_query = tours_query.filter_by(date=date_query)
     if category_query: 
-        tours_query = tours_query.filter_by(category=category_query)
+        print(category_query)
+        tours_query = tours_query.filter(Tour.category.in_(category_query))
     if city_query:
-        tours_query = tours_query.filter_by(city=city_query)
+        tours_query = tours_query.filter(Tour.city.in_(city_query))
     if is_outdoor_query:
-        tours_query = tours_query.filter_by(is_outdoor=is_outdoor_query)
-    if sort_query:
-        tours_query = tours_query.order_by(Tour.date.desc()).all()
+        tours_query = tours_query.filter(Tour.is_outdoor.in_(is_outdoor_query))
 
     if not tours_query:
         tours_query = tours_query.all()
