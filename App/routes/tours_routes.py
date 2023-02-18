@@ -4,7 +4,7 @@ from app.models.booking import Booking
 from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import get_all, pagination_helper, validate_model
-from datetime import datetime
+from datetime import datetime, timedelta
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
@@ -22,11 +22,16 @@ def get_tours_optional_query():
     city_query = request.args.get("city")
     is_outdoor_query = request.args.get("is_outdoor")
     date_query = request.args.get("date")
+
     # Sort Query
     sort_query = request.args.get("sort") # sort by date by most recent
 
     if date_query:
-        tours_query = tours_query.filter_by(date=date_query)
+        date_query = datetime.strptime(date_query, '%Y-%m-%d')
+        date_query_add_date = date_query + timedelta(days=1)
+        # print(type(date_query))
+        # print(date_query)
+        tours_query = tours_query.filter(Tour.date>=date_query).filter(Tour.date <= date_query_add_date)
     if category_query: 
         tours_query = tours_query.filter_by(category=category_query)
     if city_query:

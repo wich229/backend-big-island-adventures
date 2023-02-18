@@ -15,14 +15,21 @@ class Tour(db.Model):
     bookings = db.relationship("Booking", back_populates="tour")
     description = db.Column(db.String)
     photo_url = db.Column(db.String)
+
     
     def to_dict(self):
+        
+        # iso_date = datetime.date(self.date).isoformat()
+        # iso_format = "%Y-%m-%d"
+        # datetime.strptime(iso_date, iso_format)
+        
         return {
             "id": self.id,
             "name": self.name,
             "city": self.city,
             "address": self.address,
-            "date": self.date.strftime('%-m/%-d/%Y'),
+            "date": self.date,
+            "date_with_time":self.date,
             "duration_in_min": self.duration_in_min,
             "price": self.price,
             "category": self.category,
