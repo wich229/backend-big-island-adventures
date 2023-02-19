@@ -1,12 +1,13 @@
 from app import db
 from datetime import datetime
-
+from time import time
 class Tour(db.Model):
     id = db.Column(db.Integer, primary_key = True, autoincrement = True)
     name = db.Column(db.String)
     city = db.Column(db.String)
     address = db.Column(db.String)
     date = db.Column(db.DateTime)
+    time = db.Column(db.DateTime)
     duration_in_min = db.Column(db.Integer)
     price = db.Column(db.Float)
     category = db.Column(db.String)
@@ -29,7 +30,8 @@ class Tour(db.Model):
             "is_outdoor": self.is_outdoor,
             "capacity": self.capacity,
             "description": self.description,
-            "photo_url": self.photo_url
+            "photo_url": self.photo_url,
+            "time": self.time
         }
     
     @classmethod
@@ -38,24 +40,17 @@ class Tour(db.Model):
             name=tour_data["name"], 
             city=tour_data["city"], 
             address=tour_data["address"],
-            date=tour_data["date"],
+            date=datetime.strptime(tour_data["date"], ('%m/%d/%Y')),
             duration_in_min=tour_data["duration_in_min"],
             price=tour_data["price"],
             category=tour_data["category"],
             is_outdoor=tour_data["is_outdoor"],
             capacity=tour_data["capacity"],
             description=tour_data["description"],
-            photo_url=tour_data["photo_url"]
+            photo_url=tour_data["photo_url"],
+            time=tour_data["time"]
         )
         return new_tour
-    
-    # def available_capacity(self, saled_tickets_total):
-    #     # available_capacity = capacity - (add up each booking tickets from the tour_id)
-    #     available_capacity = self.capacity - saled_tickets_total
-    #     if available_capacity <= 0:
-    #         return 0
-    #     return available_capacity
-    
     
     # updated -------------------------------------------------------
     def available_capacity(self):
@@ -64,4 +59,3 @@ class Tour(db.Model):
         
         available_capacity = self.capacity - total_saled
         return available_capacity
-            

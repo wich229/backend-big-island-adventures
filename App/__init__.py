@@ -52,4 +52,5 @@ def create_app(test_config=None):
     app.register_blueprint(bookings_bp)
 
     CORS(app)
+
     return app
