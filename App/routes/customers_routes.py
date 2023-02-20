@@ -29,18 +29,18 @@ def login_required(f):
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 
-# @customers_bp.route("/@user")
-# def get_current_user():
-#     user_id = session.get("user_id")
+@customers_bp.route("/@user" , methods=["GET"])
+def get_current_user():
+    user_id = session.get("customer_id")
 
-#     if not user_id:
-#         return make_response(jsonify({"error": "Unauthorized"}), 401)
+    if not user_id:
+        return make_response(jsonify({"error": "Unauthorized"}), 401)
     
-#     user = Customer.query.filter_by(id=user_id).first()
-#     return jsonify({
-#         "id": user.id,
-#         "email": user.email
-#     },) 
+    user = Customer.query.filter_by(id=user_id).first()
+    return jsonify({
+        "id": user.id,
+        "email": user.email
+    },) 
 
 # POST /add customer
 @customers_bp.route("/register", methods=["POST"])

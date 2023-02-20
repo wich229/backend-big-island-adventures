@@ -59,4 +59,3 @@ class Tour(db.Model):
         
         available_capacity = self.capacity - total_saled
         return available_capacity
-            
