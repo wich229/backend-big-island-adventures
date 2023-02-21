@@ -5,6 +5,7 @@ from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import get_all, pagination_helper, validate_model
 from datetime import datetime, timedelta
+from datetime import datetime, date
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
 
@@ -25,13 +26,6 @@ def get_tours_optional_query():
     date_query = request.args.get("date")
 
     if date_query:
-        # my soluction-------------------------------------------------------
-        # date_query = datetime.strptime(date_query, '%Y-%m-%d')
-        # date_query_add_date = date_query + timedelta(days=1)
-        # # print(type(date_query))
-        # # print(date_query)
-        # tours_query = tours_query.filter(Tour.date>=date_query).filter(Tour.date <= date_query_add_date)
-        # --------------------------------------------------------------------
         date_query = datetime.strptime(date_query, ("%m/%d/%Y"))
         tours_query = tours_query.filter_by(date=date_query)
     if category_query: 
@@ -69,7 +63,7 @@ def create_tour():
     try:
         new_tour = Tour.from_dict(tour_data)
     except KeyError as e:
-        abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
+        abort(make_response({"details": f"Request body must include {e[0]}"}, 400))
 
     db.session.add(new_tour)
     db.session.commit()
@@ -87,17 +81,17 @@ def update_tour_by_id(tour_id):
         tour.name=tour_data["name"]
         tour.city=tour_data["city"]
         tour.address=tour_data["address"]
-        tour.date=datetime.strptime(tour_data["date"], ('%m/%d/%Y'))
+        tour.date=tour_data["date"]
         tour.duration_in_min=tour_data["duration_in_min"]
         tour.price=tour_data["price"]
         tour.category=tour_data["category"]
         tour.is_outdoor=tour_data["is_outdoor"]
         tour.capacity=tour_data["capacity"]
         tour.description=tour_data["description"]
-        tour.photo_url=tour_data["photo_url"]
+        tour.photo_url=tour_data["photo_url"],
+        tour.time = tour_data["time"]
     except KeyError as e:
         abort(make_response({"details": f"Request boy must include {e[0]}"}, 400))
-    print(f"TOUR DATA {tour.to_dict()}")
     db.session.commit()
 
     return make_response(jsonify(tour.to_dict()), 200)

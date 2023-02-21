@@ -30,11 +30,10 @@ customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 
-@customers_bp.route("/@user",methods=["POST"])
+@customers_bp.route("/@user" , methods=["GET"])
 def get_current_user():
-    # user_id = session.get("customer_id")
-    user_id = request.json['id']
-     
+    user_id = session.get("customer_id")
+
     if not user_id:
         return make_response(jsonify({"error": "Unauthorized"}), 401)
     
