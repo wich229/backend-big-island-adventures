@@ -9,38 +9,40 @@ from app.routes.helpers import validate_model
 
 
 
+
 customers_bp = Blueprint("customers_bp", __name__, url_prefix="/customers")
 
 #-------------------------------------------------------------------------------
 #---------------------------- Helper Functions ---------------------------------
 #-------------------------------------------------------------------------------
-def login_required(f):
-    """
-    Decorate routes to require login.
-    https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
-    """
-    @wraps(f)
-    def decorated_function(*args, **kwargs):
-        if session.get("user_id") is None:
-            return redirect("/login")
-        return f(*args, **kwargs)
-    return decorated_function
+# def login_required(f):
+#     """
+#     Decorate routes to require login.
+#     https://flask.palletsprojects.com/en/1.1.x/patterns/viewdecorators/
+#     """
+#     @wraps(f)
+#     def decorated_function(*args, **kwargs):
+#         if session.get("user_id") is None:
+#             return redirect("/login")
+#         return f(*args, **kwargs)
+#     return decorated_function
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 #-------------------------------------------------------------------------------
 
-# @customers_bp.route("/@user")
-# def get_current_user():
-#     user_id = session.get("user_id")
-
-#     if not user_id:
-#         return make_response(jsonify({"error": "Unauthorized"}), 401)
+@customers_bp.route("/@user",methods=["POST"])
+def get_current_user():
+    # user_id = session.get("customer_id")
+    user_id = request.json['id']
+     
+    if not user_id:
+        return make_response(jsonify({"error": "Unauthorized"}), 401)
     
-#     user = Customer.query.filter_by(id=user_id).first()
-#     return jsonify({
-#         "id": user.id,
-#         "email": user.email
-#     },) 
+    user = Customer.query.filter_by(id=user_id).first()
+    return jsonify({
+        "id": user.id,
+        "email": user.email
+    },) 
 
 # POST /add customer
 @customers_bp.route("/register", methods=["POST"])
