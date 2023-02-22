@@ -16,8 +16,8 @@ def create_app(test_config=None):
     # app.url_map.strict_slashes = False
     app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
     # Configure session to use filesystem (instead of signed cookies)
-    app.config["SESSION_PERMANENT"] = False
-    app.config["SESSION_TYPE"] = "filesystem"
+    # app.config["SESSION_PERMANENT"] = False
+    # app.config["SESSION_TYPE"] = "filesystem"
 
     if test_config is None:
         app.config["SQLALCHEMY_DATABASE_URI"] = os.environ.get(
