@@ -4,6 +4,7 @@ from app.models.booking import Booking
 from app.models.customer import Customer
 from flask import Blueprint, jsonify, abort, make_response, request
 from app.routes.helpers import get_all, pagination_helper, validate_model
+from datetime import datetime, timedelta
 from datetime import datetime, date
 
 tours_bp = Blueprint("tours_bp", __name__, url_prefix="/tours")
