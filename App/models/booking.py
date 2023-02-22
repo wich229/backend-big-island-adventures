@@ -20,7 +20,8 @@ class Booking(db.Model):
             "tour_id": self.tour_id,
             "booking_date": self.booking_date.strftime("%Y-%m-%d"),
             "status": self.status,
-            "tickets": self.tickets
+            "tickets": self.tickets,
+            "tour": self.tour.to_dict()
         }
 
 
